@@ -1,0 +1,48 @@
+<header>
+---
+[//]: title: "Week 2 -Assignment"
+[//]: author: "Ralf Bund"
+[//]: date: "21 Juli 2017"
+output: ioslides_presentation
+---
+</header>
+<main>
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, comment = "")
+```
+
+```{R}
+
+now.date <- Sys.Date()
+now.time <- Sys.time()
+now.tz   <- Sys.timezone()
+out <- paste("Document created on", format(now.date, "%d.%m.%Y"), 
+             "at", format(now.time, "%H:%M"), 
+             "(Timezone:", now.tz, ")")
+```
+#### `r out`
+
+```{R}
+suppressPackageStartupMessages(library(leaflet))
+suppressPackageStartupMessages(library(data.table))
+
+esprit <- makeIcon(
+  iconUrl = "https://metropolisatmetrotown.com/media/stores/logos/Esprit-clothing-accessories-men-women-children-logo.svg",
+  iconWidth = "100", iconHeight = "30"
+)
+
+loc <- fread(".\\esprit.csv")
+
+map <- leaflet(width = "100%") %>% 
+            addTiles() %>% 
+            addMarkers(lng = ~longitude, lat = ~latitude, label = ~label, 
+                       popup = ~popup, icon = esprit, data = loc,
+                       clusterOptions = markerClusterOptions(
+                         removeOutsideVisibleBounds = TRUE
+                       )) %>%
+            setView(lng = 6.863802, lat = 51.289886, zoom = 1)
+#            fitBounds(6.86, 51.291, 6.867, 51.288)
+map
+
+```
+</main>
